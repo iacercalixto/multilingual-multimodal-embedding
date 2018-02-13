@@ -3,6 +3,7 @@ Dataset loading
 """
 import numpy
 import os
+import tables
 
 def load_multilingual_dataset(path_to_data='./f30k-comparable-newsplits',
     langs=['en', 'de'], load_train=True, load_dev=True, load_test=True,
@@ -46,9 +47,18 @@ def load_multilingual_dataset(path_to_data='./f30k-comparable-newsplits',
            
     # Image features
     if image_features=='vgg19.fc7':
-        train_ims = numpy.load(loc+"train_fc.npz")['arr_0'] if load_train and load_images else None
-        dev_ims  = numpy.load(loc+"dev_fc.npz")['arr_0'] if load_dev and load_images  else None
-        test_ims = numpy.load(loc+"test_fc.npz")['arr_0'] if load_test and load_images  else None
+        #train_ims = numpy.load(loc+"train_fc.npz")['arr_0'] if load_train and load_images else None
+        #dev_ims  = numpy.load(loc+"dev_fc.npz")['arr_0'] if load_dev and load_images  else None
+        #test_ims = numpy.load(loc+"test_fc.npz")['arr_0'] if load_test and load_images  else None
+        train_file = tables.open_file(loc+"flickr30k_train_vgg19_bn_cnn_features.hdf5", mode='r') if load_train and load_images else None
+        train_ims = train_file.root.global_feats[:]
+        valid_file = tables.open_file(loc+"flickr30k_valid_vgg19_bn_cnn_features.hdf5", mode='r') if load_train and load_images else None
+        dev_ims = valid_file.root.global_feats[:]
+        test_file  = tables.open_file(loc+"flickr30k_test_vgg19_bn_cnn_features.hdf5", mode='r') if load_test and load_images  else None
+        test_ims = test_file.root.global_feats[:]
+        train_file.close()
+        valid_file.close()
+        test_file.close()
     else:
         raise Exception("image_features parameter value not supported: %s"%str(image_features))
 

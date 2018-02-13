@@ -3,25 +3,20 @@ Dataset loading
 """
 import numpy
 
-#-----------------------------------------------------------------------------#
-# Specify dataset(s) location here
-#-----------------------------------------------------------------------------#
-#path_to_data = '/ichec/work/dcu01/icalixto/resources/multilingual-multimodal/'
-path_to_data = '/media/storage2tb/resources/multilingual-multimodal/'
-#-----------------------------------------------------------------------------#
-
-def load_multilingual_dataset(names=['f30k-comparable-newsplits', 'f30k-translational'],
+def load_multilingual_dataset(path_to_data=['./f30k-comparable-newsplits', './f30k-translated'],
         langs=['en', 'de'], load_train=True, load_dev=True, load_test=True):
     """
     Load comparable and translational descriptions
     in languages in `langs` parameter and image features
     """
     assert(type(langs) == list and len(langs)>=2), 'Must provide at least two languages'
-    assert(type(names) == list and len(names)==2), \
-        'Must provide one comparable and one translational dataset'
+    #assert(type(names) == list and len(names)==2), \
+    #    'Must provide one comparable and one translational dataset'
 
-    loc_comparable = path_to_data + names[0] + "/"
-    loc_translational = path_to_data + names[1] + "/"
+    #loc_comparable = path_to_data + names[0] + "/"
+    #loc_translational = path_to_data + names[1] + "/"
+    loc_comparable = path_to_data[0] + "/"
+    loc_translational = path_to_data[1] + "/"
     
     # Image descriptions
     # comparable
@@ -77,17 +72,31 @@ def load_multilingual_dataset(names=['f30k-comparable-newsplits', 'f30k-translat
 
            
     # Image features
-    #if name.startswith('f30k'):
-    c_train_ims = numpy.load(loc_comparable+"train.npz")['arr_0'] if load_train else None
-    c_dev_ims  = numpy.load(loc_comparable+"dev.npz")['arr_0'] if load_dev else None
-    c_test_ims = numpy.load(loc_comparable+"test.npz")['arr_0'] if load_test else None
-    t_train_ims = numpy.load(loc_translational+"train.npz")['arr_0'] if load_train else None
-    t_dev_ims  = numpy.load(loc_translational+"dev.npz")['arr_0'] if load_dev else None
-    t_test_ims = numpy.load(loc_translational+"test.npz")['arr_0'] if load_test else None
-    #else:
-    #    train_ims = numpy.load(loc+"train.npy") if load_train else None
-    #    dev_ims  = numpy.load(loc+"dev.npy") if load_dev else None
-    #    test_ims = numpy.load(loc+"test.npy") if load_test else None
+    ##if name.startswith('f30k'):
+    #c_train_ims = numpy.load(loc_comparable+"train.npz")['arr_0'] if load_train else None
+    #c_dev_ims  = numpy.load(loc_comparable+"dev.npz")['arr_0'] if load_dev else None
+    #c_test_ims = numpy.load(loc_comparable+"test.npz")['arr_0'] if load_test else None
+    #t_train_ims = numpy.load(loc_translational+"train.npz")['arr_0'] if load_train else None
+    #t_dev_ims  = numpy.load(loc_translational+"dev.npz")['arr_0'] if load_dev else None
+    #t_test_ims = numpy.load(loc_translational+"test.npz")['arr_0'] if load_test else None
+    ##else:
+    ##    train_ims = numpy.load(loc+"train.npy") if load_train else None
+    ##    dev_ims  = numpy.load(loc+"dev.npy") if load_dev else None
+    ##    test_ims = numpy.load(loc+"test.npy") if load_test else None
+    train_file = tables.open_file(loc+"flickr30k_train_vgg19_bn_cnn_features.hdf5", mode='r') if load_train and load_images else None
+    c_train_ims = train_file.root.global_feats[:]
+    valid_file = tables.open_file(loc+"flickr30k_valid_vgg19_bn_cnn_features.hdf5", mode='r') if load_train and load_images else None
+    c_dev_ims = valid_file.root.global_feats[:]
+    test_file  = tables.open_file(loc+"flickr30k_test_vgg19_bn_cnn_features.hdf5", mode='r') if load_test and load_images  else None
+    c_test_ims = test_file.root.global_feats[:]
+    # the images in the translated and comparable data sets are equal
+    t_train_ims = c_train_ims
+    t_dev_ims = c_dev_ims
+    t_test_ims = c_test_ims
+    train_file.close()
+    valid_file.close()
+    test_file.close()
+
 
     return ((c_train_caps_list, c_train_ims, 0), (t_train_caps_list, t_train_ims, 1)), \
            ((c_dev_caps_list, c_dev_ims, 0), (t_dev_caps_list, t_dev_ims, 1)), \

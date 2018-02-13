@@ -37,7 +37,7 @@ from homogeneous_data_multilingual_with_translational_evidence \
         import HomogeneousDataMultilingualWithTranslationalEvidence, prepare_data
 
 # main trainer
-def trainer(data=['f30k-half-comparable', 'f30k-translational'],
+def trainer(data=['f30k-comparable', 'f30k-translational'],
             langs=['en', 'de'],
             margin=1,
             dim=1600, # 800 forward, 800 backward
@@ -51,7 +51,7 @@ def trainer(data=['f30k-half-comparable', 'f30k-translational'],
             maxlen_w=100,
             optimizer='adam',
             batch_size = 128,
-            saveto='/media/storage2tb/models/multilingual-multimodal/f30k-half-comparable-and-translational.npz',
+            saveto='./f30k-half-comparable-and-translational.npz',
             validFreq=100,
             lrate=0.0002,
             reload_=False,
