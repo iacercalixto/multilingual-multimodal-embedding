@@ -4,7 +4,7 @@ import math
 import torch
 import torch.nn as nn
 
-sys.path.append('/home/icalixto/tools/pretrained-models.pytorch')
+#sys.path.append('/home/icalixto/tools/pretrained-models.pytorch')
 import pretrainedmodels
 import pretrainedmodels.utils
 
