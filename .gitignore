@@ -2,6 +2,7 @@ models/*
 logs/*
 data/*
 dicts/*
+*_cnn_features.hdf5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
