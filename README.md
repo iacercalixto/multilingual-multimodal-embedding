@@ -73,6 +73,7 @@ By default, models are saved under the `./models/` directory. This will evaluate
 
 If you found this code interesting and/or useful, please consider citing the following paper:
 
+```
 @InProceedings{CalixtoLiu2017:RANLP,
   author    = {Calixto, Iacer and Liu, Qun},
   title     = {{Sentence-Level Multilingual Multi-modal Embedding for Natural Language Processing}},
@@ -83,5 +84,5 @@ If you found this code interesting and/or useful, please consider citing the fol
   pages     = {139--148},
   url       = {https://doi.org/10.26615/978-954-452-049-6_020}
 }
-
+```
 
